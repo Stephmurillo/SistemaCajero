@@ -8,104 +8,106 @@ import java.util.List;
 import system.logic.Cliente;
 
 public class ClienteDAO {
+
     DataBase db;
-    
-    public ClienteDAO(){
+
+    public ClienteDAO() {
         db = DataBase.instance();
     }
 
-    public void create(Cliente c) throws Exception{
-        String sql="insert into cliente (usuario, clave, saldo) "+
-                "values(?,?,?)";
+    public void create(Cliente c) throws Exception {
+        String sql = "insert into cliente (user, password, balance)"
+                + "values(?,?,?)";
         PreparedStatement stm = db.prepareStatement(sql);
         stm.setString(1, c.getUsuario());
         stm.setString(2, c.getClave());
         stm.setString(3, String.valueOf(c.getSaldoCuenta()));
-      
-        int count=db.executeUpdate(stm);
-        if (count==0){
+
+        int count = db.executeUpdate(stm);
+        if (count == 0) {
             throw new Exception("Cliente ya existe.");
         }
     }
-    
-    public Cliente read(String cedula) throws Exception{
-        String sql="select * from Cliente c where usuario=?";
+
+    public Cliente read(String usuario) throws Exception {
+        String sql = "select * from Cliente c where user=?";
         PreparedStatement stm = db.prepareStatement(sql);
-        stm.setString(1, cedula);
-        ResultSet rs =  db.executeQuery(stm);
+        stm.setString(1, usuario);
+        ResultSet rs = db.executeQuery(stm);
         if (rs.next()) {
-            Cliente c = from(rs, "c"); 
+            Cliente c = from(rs, "c");
             return c;
-        }
-        else{
-            throw new Exception ("Cliente no existe.");
+        } else {
+            throw new Exception("Cliente no existe.");
         }
     }
-    public void update(Cliente c) throws Exception{
-        String sql="update cliente set clave=?, saldo=? "+
-                "where usuario=?";
+
+    public void update(Cliente c) throws Exception {
+        String sql = "update cliente set password=?, balance=? "
+                + "where user=?";
         PreparedStatement stm = db.prepareStatement(sql);
         stm.setString(1, c.getUsuario());
         stm.setString(2, c.getClave());
-        stm.setString(3, String.valueOf(c.getSaldoCuenta()));       
-        int count=db.executeUpdate(stm);
-        if (count==0){
+        stm.setString(3, String.valueOf(c.getSaldoCuenta()));
+        int count = db.executeUpdate(stm);
+        if (count == 0) {
             throw new Exception("Cliente no existe");
-        }        
-    }
-
-    public void delete(Cliente c) throws Exception{
-        String sql="delete from cliente where usuario=?";
-        PreparedStatement stm = db.prepareStatement(sql);
-        stm.setString(1, c.getUsuario());
-        int count=db.executeUpdate(stm);
-        if (count==0){
-            throw new Exception("Cliebte no existe.");
         }
     }
-    
-    
-    public List<Cliente> findAll(){
-        List<Cliente> resultado=new ArrayList<>();
-        try {
-            String sql="select * from Cliente c";
-            PreparedStatement stm = db.prepareStatement(sql);
-            ResultSet rs =  db.executeQuery(stm);
-            Cliente c;
-            while (rs.next()) {
-                c = from(rs, "c"); 
-                resultado.add(c);
-            }
-        } catch (SQLException ex) { }
-        return resultado;        
+
+    public void delete(Cliente c) throws Exception {
+        String sql = "delete from cliente where user=?";
+        PreparedStatement stm = db.prepareStatement(sql);
+        stm.setString(1, c.getUsuario());
+        int count = db.executeUpdate(stm);
+        if (count == 0) {
+            throw new Exception("Cliente no existe.");
+        }
     }
 
-    public List<Cliente> findByCedula(String cedula){
+    public List<Cliente> findAll() {
         List<Cliente> resultado = new ArrayList<>();
         try {
-            String sql="select * from cliente c "+
-                    "where c.usuario like ?";            
+            String sql = "select * from Cliente c";
             PreparedStatement stm = db.prepareStatement(sql);
-            stm.setString(1, cedula+"%");
-            ResultSet rs =  db.executeQuery(stm); 
+            ResultSet rs = db.executeQuery(stm);
             Cliente c;
             while (rs.next()) {
-                c = from(rs, "c"); 
+                c = from(rs, "c");
                 resultado.add(c);
             }
-        } catch (SQLException ex) {  }
+        } catch (SQLException ex) {
+        }
         return resultado;
     }
-    
-    public Cliente from(ResultSet rs, String alias){
+
+    public List<Cliente> findByCedula(String usuario) {
+        List<Cliente> resultado = new ArrayList<>();
         try {
-            Cliente c= new Cliente();
-            c.setUsuario(rs.getString(alias+".usuario"));
-            c.setClave(rs.getString(alias+".clave"));
-            c.setSaldoCuenta(Double.parseDouble(rs.getString(alias+".saldo")));
+            String sql = "select * from cliente c "
+                    + "where c.user like ?";
+            PreparedStatement stm = db.prepareStatement(sql);
+            stm.setString(1, usuario + "%");
+            ResultSet rs = db.executeQuery(stm);
+            Cliente c;
+            while (rs.next()) {
+                c = from(rs, "c");
+                resultado.add(c);
+            }
+        } catch (SQLException ex) {
+        }
+        return resultado;
+    }
+
+    public Cliente from(ResultSet rs, String alias) {
+        try {
+            Cliente c = new Cliente();
+            c.setUsuario(rs.getString(alias + ".user"));
+            c.setClave(rs.getString(alias + ".password"));
+            c.setSaldoCuenta(rs.getDouble(alias + ".balance"));
             return c;
         } catch (SQLException ex) {
             return null;
         }
-    }    
+    }
 }

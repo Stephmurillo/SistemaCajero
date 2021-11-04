@@ -7,7 +7,7 @@ public class Cliente {
         this.clave = clave;
         this.saldoCuenta = saldoCuenta;
     }
-    
+
     public Cliente() {
         this.usuario = "";
         this.clave = "";
@@ -37,9 +37,9 @@ public class Cliente {
     public void setSaldoCuenta(double saldoCuenta) {
         this.saldoCuenta = saldoCuenta;
     }
-    
+
     public String usuario;
     public String clave;
     public double saldoCuenta;
-    
+
 }

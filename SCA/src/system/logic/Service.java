@@ -19,12 +19,12 @@ public class Service {
     ClienteDAO cDao;
 
     // Service methods
-    public Cliente clienteGet(String cedula) throws Exception {
-        return cDao.read(cedula);
+    public Cliente clienteGet(String usuario) throws Exception {
+        return cDao.read(usuario);
     }
 
-    public List<Cliente> clienteSearch(String cedula) {
-        return cDao.findByCedula(cedula);
+    public List<Cliente> clienteSearch(String usuario) {
+        return cDao.findByCedula(usuario);
     }
 
     public List<Cliente> clienteAll() {
@@ -38,6 +38,7 @@ public class Service {
     public Service() {
         try {
             cDao = new ClienteDAO();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 }
