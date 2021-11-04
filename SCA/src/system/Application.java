@@ -1,20 +1,23 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 package system;
 
-/**
- *
- * @author muril
- */
+import system.logic.Cliente;
+import system.logic.Service;
+
 public class Application {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Cliente clien1 = new Cliente();
+        
+        Cliente clien2 = new Cliente("Mari1970", "1234", 10000);
+        
+        try {
+            Service.instance().clienteAdd(clien2);
+            Service.instance().clienteGet("Mari1970");
+            
+            
+        } catch (Exception ex) {
+        }
+         
+        System.out.println("Usuario: " + clien2.getUsuario());
     }
-    
 }
