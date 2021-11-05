@@ -1,5 +1,6 @@
 package system.logic;
 
+import java.util.ArrayList;
 import java.util.List;
 import system.data.ClienteDAO;
 
@@ -34,10 +35,22 @@ public class Service {
     public void clienteAdd(Cliente cliente) throws Exception {
         cDao.create(cliente);
     }
+    
+     public Cliente login(Cliente u) throws Exception{
+        if(usuarios.contains(u)) return u;
+        else throw new Exception("Usuario no existe");
+    }
 
+     public String echo(Cliente u, String parameter) { //no es ncesario
+        return parameter + " "+ u.getUsuario();
+    }
+     
     public Service() {
         try {
+            usuarios = new ArrayList<>();
             cDao = new ClienteDAO();
         } catch (Exception e) {}
     }
+    
+     List<Cliente> usuarios;
 }
